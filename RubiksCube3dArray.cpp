@@ -45,7 +45,13 @@ public :
         }
     }
 
-    COLOR getColor(FACE f , const int row , const int column) override {
+    RubiksCube & update(FACE f,const int row,const int col , COLOR c) override {
+
+        sticker[static_cast<int>(f)][row][col] = getColorInitials(c) ;
+        return *this ;
+    }
+
+    COLOR getColor(FACE f , const int row , const int column) const override {
     switch (char c = sticker[static_cast<int>(f)][row][column]) {
         case 'R': return COLOR::RED;
         case 'B': return COLOR::BLUE;
@@ -153,17 +159,17 @@ public :
         // preserve face 0 0th column
         for (int i = 0 ; i < 3 ; i++) preserve[i] = sticker[0][i][0] ;
 
-        //update face 0 0th column by face 1 0th column
-        for (int i = 0 ; i < 3 ; i++) sticker[0][i][0] = sticker[1][i][0] ;
+        //update face 0 0th column by face 4 2thcolumn
+        for (int i = 0 ; i < 3 ; i++) sticker[0][i][0] = sticker[4][2-i][2] ;
 
-        // update face 1 0th column by face 5 0th column
-        for (int i = 0 ; i < 3 ; i++) sticker[1][i][0] = sticker[5][i][0] ;
+        // update face 4 2th column by face 5 0th column
+        for (int i = 0 ; i < 3 ; i++) sticker[4][i][2] = sticker[5][2-i][0] ;
 
-        // update face 5 0th column by face 4  2th column
-        for (int i = 0 ; i < 3 ; i++) sticker[5][i][0] = sticker[4][i][2] ;
+        // update face 5 0th column by face 1  0th column
+        for (int i = 0 ; i < 3 ; i++) sticker[5][i][0] = sticker[1][i][0] ;
 
-        //update face 4 2nd column by face 0 0th column
-        for (int i = 0 ; i < 3 ; i++) sticker[4][i][2] = preserve[2-i] ;
+        //update face 1 0th column by face 0 0th column
+        for (int i = 0 ; i < 3 ; i++) sticker[1][i][0] = preserve[i] ;
         return *this ;
     };
 
@@ -287,5 +293,48 @@ public :
         return *this ;
     }
 
+    RubiksCube3dArray &operator=(const RubiksCube3dArray &other) {
 
+        if (this == &other) return *this ;
+        for (int face = 0 ; face < 6 ; face++) {
+            for (int row = 0 ; row < 3 ; row++) {
+                for (int col = 0 ; col < 3 ; col++) {
+                    sticker[face][row][col] = getColorInitials(other.getColor(RubiksCube::FACE(face),row,col)) ;
+                }
+            }
+        }
+
+        return *this ;
+    }
+
+    bool operator==(const RubiksCube3dArray & other) const {
+
+        for (int face = 0 ; face < 6 ; face++) {
+            for (int row = 0 ; row < 3 ; row++) {
+                for (int col = 0 ; col < 3 ; col++) {
+                    if (sticker[face][row][col] != getColorInitials(other.getColor(RubiksCube::FACE(face),row,col))) return false ;
+                }
+            }
+        }
+
+        return  true ;
+    }
+};
+
+class RubiksCube3dArrayHash {
+
+public:
+    size_t operator()(const RubiksCube3dArray & r) const {
+
+        string s ;
+
+        for (int i = 0 ; i < 6 ; i++) {
+            for (int j = 0 ; j < 3 ; j++) {
+                for (int k = 0 ; k < 3 ; k++) {
+                    s += RubiksCube::getColorInitials(r.getColor(RubiksCube::FACE(i),j,k)) ;
+                }
+            }
+        }
+        return hash<string>()(s) ;
+    }
 };

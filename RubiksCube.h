@@ -12,6 +12,7 @@ using namespace std ;
 class RubiksCube {
 
 public :
+    virtual ~RubiksCube() = default;
 
     enum class FACE{
         UP,
@@ -54,7 +55,7 @@ public :
     RubiksCube& move(MOVE m);
     RubiksCube& invertMove(MOVE m);
 
-    virtual COLOR getColor(FACE f , int row , int column) = 0 ;
+    virtual COLOR getColor(FACE f , int row , int column) const = 0 ;
 
     // 18 Rotational Moves
     // F,F',F2,
@@ -88,6 +89,12 @@ public :
     virtual RubiksCube &bPrime() = 0 ;
     virtual  RubiksCube &b2() = 0 ;
 
+    virtual RubiksCube& update(FACE ,int, int  , COLOR ) = 0 ;
+    // friend  bool operator==(RubiksCube & a , RubiksCube & b) ; not implemented as a friend
+
+    // bool operator==(RubiksCube & other ) const ;
+
+    // virtual RubiksCube & operator=(const RubiksCube & other) = 0 ;
 };
 
 

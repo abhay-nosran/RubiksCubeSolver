@@ -4,7 +4,7 @@
 
 #include "RubiksCube.h"
 
-char RubiksCube::getColorInitials(const COLOR c) {
+char RubiksCube::getColorInitials(COLOR c) {
 
     switch (c) {
             case COLOR::RED: return 'R';
@@ -55,7 +55,7 @@ RubiksCube& RubiksCube :: move(const MOVE m) {
         case MOVE::BPRIME : return this->bPrime() ;
 
         case MOVE::D : return this->d() ;
-            case MOVE::DPRIME : return this->d() ;
+            case MOVE::DPRIME : return this->dPrime() ;
             case MOVE::D2 : return this->d2() ;
 
             case MOVE::F : return this->f() ;
@@ -67,11 +67,11 @@ RubiksCube& RubiksCube :: move(const MOVE m) {
             case MOVE::LPRIME : return this->lPrime() ;
 
             case MOVE::R : return this->r() ;
-            case MOVE::RPRIME : return this->r() ;
+            case MOVE::RPRIME : return this->rPrime() ;
             case MOVE::R2 : return this->r2() ;
 
             case MOVE::U : return this->u() ;
-            case MOVE::UPRIME : return this->u() ;
+            case MOVE::UPRIME : return this->uPrime() ;
             default: return this->u2();
     }
 }
@@ -185,3 +185,31 @@ void RubiksCube::print() {
     }
     cout << '\n' ;
 }
+
+// bool RubiksCube::operator==(RubiksCube &other) const {
+//     for (int face = 0 ; face < 7 ; face++) {
+//         for (int row = 0 ; row < 3 ; row++) {
+//             for (int col = 0 ; col < 3 ; col++) {
+//                 if (this->getColor(static_cast<RubiksCube::FACE>(face),row,col) != other.getColor(RubiksCube::FACE(face),row,col)) {
+//                     return false;
+//                 }
+//             }
+//         }
+//     }
+//
+//     return true;
+// }
+
+// RubiksCube & RubiksCube :: operator=(const RubiksCube & other) {
+//
+//     if (this == &other) return *this ;
+//     for (int face = 0 ; face < 6 ; face++) {
+//         for (int row = 0 ; row < 3 ; row++) {
+//             for (int col = 0 ; col < 3 ; col++) {
+//                 this->update(static_cast<RubiksCube::FACE>(face) , row , col , other.getColor( static_cast<FACE>(face) , row , col));
+//             }
+//         }
+//     }
+//
+//     return *this ;
+// }
